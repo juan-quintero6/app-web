@@ -1,0 +1,14 @@
+{% extends 'base.html' %}  <!-- Extiende la plantilla base 'base.html' -->
+
+{% block content %}  <!-- Bloque de contenido -->
+<nav>
+    <ul style="list-style: none; padding: 0; display: flex; justify-content: center; gap: 1rem;">  <!-- Estilo del menú -->
+        <a href="{% url 'create_solicitud' %}" style="color: #ff6600;">Crear Solicitud</a>  <!-- Enlace para crear solicitud -->
+        <a href="{% url 'read_solicitud' %}" style="color: #ff6600;">Mis solicitudes</a>  <!-- Enlace para ver mis solicitudes -->
+        <a href="{% url 'read_envio' %}" style="color: #ff6600;">Seguimiento de Envíos</a>  <!-- Enlace para seguimiento de envíos -->
+    </ul>
+</nav>
+<div>
+    {% block page_content %}{% endblock %}  <!-- Bloque para el contenido específico de cada página -->
+</div>
+{% endblock %}

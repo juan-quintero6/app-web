@@ -1,0 +1,30 @@
+{% extends 'c-menu.html' %}  <!-- Extiende la plantilla base 'c-menu.html' -->
+
+{% block title %}Detalle de Solicitud{% endblock %}  <!-- Define el título de la página -->
+
+{% block page_content %}  <!-- Bloque de contenido de la página -->
+{% load static %}  <!-- Carga el tag 'static' para utilizar archivos estáticos -->
+
+<head>
+    <!-- Enlace a la hoja de estilos CSS específica para esta vista -->
+    <link rel="stylesheet" href="{% static 'css/c_read_solicitud.css' %}">
+</head>
+
+<h1>Detalle de Solicitud</h1>  <!-- Encabezado principal de la página -->
+<div class="container">  <!-- Contenedor principal -->
+    <ul>
+        <!-- Lista de detalles de la solicitud -->
+        <li><strong>ID de solicitud:</strong> {{ solicitud.id }}</li>
+        <li><strong>Nombre del producto:</strong> {{ solicitud.nombre_producto }}</li>
+        <li><strong>Punto de origen:</strong> {{ solicitud.origen }}</li>
+        <li><strong>Punto de destino:</strong> {{ solicitud.destino }}</li>
+        <li><strong>Fecha de entrega:</strong> {{ solicitud.fecha_entrega }}</li>
+        <li><strong>Descripción:</strong> {{ solicitud.descripcion }}</li>
+        <li><strong>Nombre receptor:</strong> {{ solicitud.receptor }}</li>
+        <li><strong>Numero de cédula:</strong> {{ solicitud.cedula }}</li>
+        <li><strong>Telefono de contacto:</strong> {{ solicitud.telefono }}</li>        
+    </ul>
+    <!-- Enlace para volver a la lista de solicitudes -->
+    <a href="{% url 'c_read_solicitud' %}" class="btn">Solicitudes</a>
+</div>
+{% endblock %}  <!-- Fin del bloque de contenido de la página -->

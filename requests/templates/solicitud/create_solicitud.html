@@ -1,0 +1,29 @@
+{% extends 'menu.html' %}  <!-- Extiende la plantilla base 'menu.html' -->
+
+{% block title %}Crear Solicitud{% endblock %}  <!-- Define el título de la página -->
+
+{% block page_content %}  <!-- Bloque de contenido de la página -->
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDA8Dyna2iOdz-3LHglPTOIyEU756VTXLU&libraries=places"></script>
+<script>
+    // Función para inicializar los autocompletados de Google Places
+    function initAutocomplete() {
+        var origenInput = document.getElementById('id_origen');  // Input del origen
+        var destinoInput = document.getElementById('id_destino');  // Input del destino
+
+        var origenAutocomplete = new google.maps.places.Autocomplete(origenInput);  // Autocompletado para el origen
+        var destinoAutocomplete = new google.maps.places.Autocomplete(destinoInput);  // Autocompletado para el destino
+    }
+
+    google.maps.event.addDomListener(window, 'load', initAutocomplete);  // Cargar la función de autocompletado al cargar la página
+</script>
+<h1>Crear Nueva Solicitud de Carga</h1>  <!-- Título principal -->
+
+<div class="form-container">  <!-- Contenedor del formulario -->
+    <form method="POST" action="{% url 'create_solicitud' %}">  <!-- Formulario para crear una nueva solicitud -->
+        {% csrf_token %}  <!-- Token CSRF para seguridad -->
+        {{ form.as_p }}  <!-- Renderiza el formulario como párrafos -->
+        <button type="submit">Crear</button>  <!-- Botón para enviar el formulario -->
+    </form>
+</div>
+{% endblock %}

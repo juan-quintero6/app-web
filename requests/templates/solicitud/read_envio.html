@@ -1,0 +1,28 @@
+{% extends 'menu.html' %}  <!-- Extiende la plantilla base 'menu.html' -->
+
+{% block title %}Envios{% endblock %}  <!-- Define el título de la página -->
+
+{% block page_content %}  <!-- Bloque de contenido de la página -->
+{% load static %}  <!-- Cargar archivos estáticos -->
+
+<head>
+    <link rel="stylesheet" href="{% static 'css/read_solicitud.css' %}">  <!-- Enlace a la hoja de estilos CSS -->
+</head>
+
+<div class="container">  <!-- Contenedor principal -->
+    <h1>Envíos</h1>  <!-- Título principal -->
+    <ul>  <!-- Lista de envíos -->
+        {% for solicitud in solicitudes %}  <!-- Bucle para cada solicitud en la lista -->
+        <li>
+            <div>
+                <strong>{{ solicitud.nombre_producto }}</strong> - {{ solicitud.fecha_entrega }} <br> {{ solicitud.origen }} <br> {{ solicitud.destino }}  <br> <strong>{{ solicitud.estado }}</strong>
+            </div>
+        </li>
+        {% empty %}
+        <li>No hay solicitudes.</li>  <!-- Mensaje si no hay solicitudes -->
+        {% endfor %}
+    </ul>
+    <a href="{% url 'read_solicitud' %}" class="btn">Mis Solicitudes</a>  <!-- Enlace para ver mis solicitudes -->
+</div>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<h3>VERIFICACIÓN DE TOKEN</h3>
+
+<br>
+
+<form id="token-form" action="" method="post">
+    {% csrf_token %}
+    <div class="card mx-auto" style="width: 30rem;">
+      <div class="card-body">
+        <h5 class="card-title">Ingrese su token de verificación</h5>
+        {{ form | crispy }}
+        {% if error %}
+          <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        <button class="btn btn-sm btn-primary float-end" type="submit">Verificar</button>
+      </div>
+    </div>
+</form>
+
+{% endblock %}

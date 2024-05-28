@@ -1,0 +1,90 @@
+/* Establece los estilos generales del cuerpo de la página */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Estilos para el contenedor principal */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Estilos para los encabezados (h1) */
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+/* Estilos para la lista */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* Estilos para los elementos de la lista */
+li {
+    background-color: #fff;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para el contenedor de información de la solicitud */
+.solicitud-info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Estilos para la información de la solicitud */
+.solicitud-info {
+    flex: 1;
+    margin-right: 10px;
+    word-break: break-word;
+}
+
+/* Estilos para el contenedor de botones */
+.button-container {
+    flex-shrink: 0; /* Evita que los botones se reduzcan al haber mucho texto */
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+}
+
+/* Estilos para los botones */
+.btn {
+    display: inline-block;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    text-align: center;
+}
+
+/* Efecto hover general para los botones */
+.btn:hover {
+    filter: brightness(90%);
+}
+
+/* Estilos para el botón de edición */
+.btn-edit {
+    background-color: #28a745;
+}
+
+.btn-edit:hover {
+    background-color: #218838;
+}
+
+/* Estilos para el botón de eliminación */
+.btn-delete {
+    background-color: #dc3545;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}

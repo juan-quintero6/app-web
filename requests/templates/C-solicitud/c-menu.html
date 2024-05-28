@@ -1,0 +1,13 @@
+{% extends 'c-base.html' %}  <!-- Extiende la plantilla base 'c-base.html' -->
+
+{% block content %}  <!-- Bloque de contenido -->
+<nav>
+    <ul style="list-style: none; padding: 0; display: flex; justify-content: center; gap: 1rem;">  <!-- Lista de navegación -->
+        <li><a href="{% url 'c_read_solicitud' %}" style="color: #ff6600;">Solicitudes</a></li>  <!-- Enlace a la lista de solicitudes -->
+        <li><a href="{% url 'c_read_envio' %}" style="color: #ff6600;">Envíos</a></li>  <!-- Enlace a la lista de envíos -->
+    </ul>
+</nav>
+<div>
+    {% block page_content %}{% endblock %}  <!-- Bloque de contenido de la página -->
+</div>
+{% endblock %}  <!-- Fin del bloque de contenido -->

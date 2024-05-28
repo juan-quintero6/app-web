@@ -1,0 +1,26 @@
+{% extends 'c-menu.html' %}  <!-- Extiende la plantilla base 'c-menu.html' -->
+
+{% block title %}Página Principal{% endblock %}  <!-- Define el título de la página -->
+
+{% block page_content %}  <!-- Bloque de contenido de la página -->
+<div class="container">  <!-- Contenedor principal -->
+    <div class="row justify-content-center">  <!-- Fila centrada -->
+        <div class="col-md-8 text-center">  <!-- Columna centrada -->
+            <h1 class="display-4 mt-5">Bienvenido a Carga Manager</h1>  <!-- Título principal -->
+            <p class="lead">Utilice el menú para navegar a través de las funcionalidades disponibles.</p>  <!-- Párrafo introductorio -->
+            <hr class="my-4">  <!-- Separador -->
+        </div>
+    </div>
+
+    <div class="row">  <!-- Fila con dos columnas -->
+        <div class="col-md-6">  <!-- Columna izquierda -->
+            <h2>Nuestra Visión</h2>  <!-- Título de la sección -->
+            <p>Ser la plataforma líder en el transporte de carga en Colombia, reconocida por nuestra innovación, eficiencia y compromiso con la satisfacción del cliente. Nos esforzamos por ser el socio preferido de empresas y particulares en la gestión de sus envíos, contribuyendo así al desarrollo económico y sostenible del país.</p>  <!-- Texto descriptivo -->
+        </div>
+        <div class="col-md-6">  <!-- Columna derecha -->
+            <h2>Nuestra Misión</h2>  <!-- Título de la sección -->
+            <p>Facilitar el transporte de carga a nivel nacional mediante una plataforma integral que simplifique la gestión logística, optimice los procesos de entrega y brinde visibilidad en tiempo real del estado de las mercancías. Nos comprometemos a ofrecer soluciones eficientes, confiables y sostenibles, impulsadas por la innovación y la excelencia en el servicio al cliente.</p>  <!-- Texto descriptivo -->
+        </div>
+    </div>
+</div>
+{% endblock %}

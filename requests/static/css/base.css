@@ -1,0 +1,100 @@
+/* Establece los estilos generales del cuerpo de la página */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Estilos para la barra de navegación */
+.navbar {
+    background-color: #ff6600;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Estilos para los enlaces dentro de la barra de navegación */
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 1rem;
+}
+
+/* Efecto hover para los enlaces de la barra de navegación */
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para el contenido principal */
+.content {
+    flex: 1;
+    padding: 2rem;
+    max-width: 800px;
+    margin: auto;
+}
+
+/* Estilos para el pie de página */
+footer {
+    background-color: #ff6600;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+/* Estilos para el contenedor de formularios */
+.form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para los encabezados (h1) */
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+/* Estilos para las etiquetas de los formularios */
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+/* Estilos para los campos de entrada de texto y área de texto */
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Estilos para los botones y los botones de envío */
+input[type="submit"],
+button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Efecto hover para los botones */
+input[type="submit"]:hover,
+button:hover {
+    background-color: #0056b3;
+}

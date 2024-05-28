@@ -1,0 +1,33 @@
+{% load static %}  <!-- Carga el tag 'static' para utilizar archivos estáticos -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Carga Directa{% endblock %}</title>  <!-- Título de la página -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">  <!-- Enlace a la hoja de estilos base -->
+</head>
+
+<body>
+    <header class="navbar">  <!-- Encabezado de navegación -->
+        <div>
+            <a href="{% url 'home' %}">Inicio</a>  <!-- Enlace al inicio de la aplicación -->
+        </div>
+        <div>
+            <form action="{% url 'logout' %}" method="post">  <!-- Formulario para cerrar sesión -->
+                {% csrf_token %}  <!-- Token CSRF para seguridad -->
+                <button type="submit" style="border: none; background: none; cursor: pointer;">Salir</button>  <!-- Botón para salir de la sesión -->
+            </form>
+            <a href="{% url 'edit_user' %}">Editar Usuario</a>  <!-- Enlace para editar el perfil de usuario -->
+        </div>
+    </header>
+    <main class="content">
+        {% block content %}{% endblock %}  <!-- Bloque de contenido principal -->
+    </main>
+    <footer>
+        &copy; 2024 Carga Directa  <!-- Pie de página con el año y nombre de la empresa -->
+    </footer>
+</body>
+
+</html>

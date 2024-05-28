@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<h3>Bienvenido Cliente {{ user.username }}</h3>
+<p>Tu información:</p>
+<ul>
+    <li>Nombre: {{ user.first_name }}</li>
+    <li>Apellido: {{ user.last_name }}</li>
+    <li>Correo electrónico: {{ user.email }}</li>
+</ul>
+
+<form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="nav-link" style="background-color: transparent; border: none;">Salir</button>
+  </form>
+</li>
+
+<a href="{% url 'edit_profile' %}">Editar Perfil</a>
+
+{% endblock %}

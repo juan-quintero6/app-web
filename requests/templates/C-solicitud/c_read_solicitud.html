@@ -1,0 +1,40 @@
+{% extends 'c-menu.html' %}  <!-- Extiende la plantilla base 'c-menu.html' -->
+
+{% block title %}Buscar Solicitud{% endblock %}  <!-- Define el título de la página -->
+
+{% block page_content %}  <!-- Bloque de contenido de la página -->
+{% load static %}  <!-- Carga el tag 'static' para utilizar archivos estáticos -->
+
+<head>
+    <!-- Enlace a la hoja de estilos CSS específica para esta vista -->
+    <link rel="stylesheet" href="{% static 'css/c_read_solicitud.css' %}">
+</head>
+
+<div class="container">  <!-- Contenedor principal -->
+    <h1>Mis solicitudes</h1>  <!-- Encabezado principal de la página -->
+    <ul>
+        {% for solicitud in solicitudes %}  <!-- Itera sobre la lista de solicitudes -->
+        <li>
+            <div class="solicitud-info-container">  <!-- Contenedor de la información de la solicitud -->
+                <div class="solicitud-info">  <!-- Información de la solicitud -->
+                    <strong>{{ solicitud.nombre_producto }}</strong> - {{ solicitud.fecha_entrega }} <br> {{ solicitud.origen }}
+                    <br> {{ solicitud.destino }}
+                </div>
+                <div class="button-container">  <!-- Contenedor de los botones -->
+                    <!-- Enlace al detalle de la solicitud -->
+                    <a href="{% url 'c_detail_solicitud' solicitud.id %}" class="btn btn-info">+</a>
+                    <!-- Formulario para aceptar la solicitud -->
+                    <form action="{% url 'accept_solicitud' solicitud.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}  <!-- Token CSRF para seguridad -->
+                        <button type="submit" class="btn btn-accept">Aceptar</button>
+                    </form>
+                </div>
+            </div>
+        </li>
+        {% empty %}  <!-- Si no hay solicitudes, muestra este mensaje -->
+        <li>No hay solicitudes.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}  <!-- Fin del bloque de contenido de la página -->
