@@ -1,30 +1,26 @@
+from core.models import Cliente
 from django.db import models
 
 # Create your models here.
 
 
-class Solicitud(models.Model):
-    id_cliente = models.IntegerField()
-    estado = models.CharField(max_length=10, default='En espera')
-
-    nombre_producto = models.CharField(max_length=20)
-    origen = models.CharField(max_length=150)
-    destino = models.CharField(max_length=150)
-    fecha_entrega = models.DateField()
+class Evento(models.Model):
+    id_usuario = models.IntegerField()
+    evento = models.CharField(max_length=20)
+    fecha = models.DateField()
     descripcion = models.CharField(max_length=150)
-    receptor = models.CharField(max_length=100)
-    cedula = models.CharField(max_length=10)
-    telefono = models.IntegerField(max_length=10)
+    estado = models.CharField(max_length=10, default='Abierto')
+    seguimiento_creado = models.BooleanField(default=False)
 
     # pylint: disable=invalid-str-returned
     def __str__(self):
-        return self.nombre_producto
+        return self.evento
 
-class Envio(models.Model):
-    id_conductor = models.IntegerField(default=1)
-    calificacion = models.IntegerField()
-    solicitud = models.ForeignKey(Solicitud, on_delete=models.CASCADE, related_name='envios')
+class Seguimiento(models.Model):
+    id_usuario = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    id_evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
+    cantidad = models.IntegerField()
+    fecha_seguimiento = models.DateField(auto_now_add=True)
 
-    # pylint: disable=invalid-str-returned
     def __str__(self):
-        return str(self.calificacion)
+        return f'Seguimiento de {self.id_usuario} para {self.id_evento}'    

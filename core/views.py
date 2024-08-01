@@ -15,7 +15,7 @@ def home(request):
     user = request.user
     if hasattr(user, 'perfil'):
         if user.perfil.tipo == 'cliente':
-            return redirect(reverse('create_solicitud'))
+            return redirect(reverse('create_evento'))
         elif user.perfil.tipo == 'administrador':
             return redirect('/admin/')
         elif user.perfil.tipo == 'conductor':

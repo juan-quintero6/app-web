@@ -1,0 +1,31 @@
+{% extends 'menu.html' %}
+
+{% block title %}Gestión de Seguimiento{% endblock %}
+
+{% block page_content %}
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'css/read_solicitud.css' %}">
+</head>
+
+<div class="container">
+    <h1>Gestión de Seguimiento</h1>
+    <ul>
+        <li>
+            <div class="solicitud-info-container">
+                <div>
+                    <strong>Evento: </strong>{{ seguimiento.id_evento }}  <br>
+                    <br><strong>Cantidad: </strong>{{ seguimiento.cantidad }} <br> 
+                    <br><strong>Ultimo: </strong>{{ seguimiento.fecha_seguimiento }}   
+                </div>
+                <div class="button-container2">
+                    <a href="{% url 'actualizar_seguimiento' seguimiento.id %}" class="btn btn-generico">Seguimiento</a>
+                    <a href="{% url 'actualizar_seguimiento' seguimiento.id %}" class="btn btn-delete">Cerrar Evento</a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+{% endblock %}

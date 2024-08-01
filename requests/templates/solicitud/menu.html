@@ -1,11 +1,14 @@
 {% extends 'base.html' %}  <!-- Extiende la plantilla base 'base.html' -->
-
 {% block content %}  <!-- Bloque de contenido -->
+{% load static %}  <!-- Cargar archivos estáticos -->
+<head>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">  <!-- Enlace a la hoja de estilos CSS -->
+</head>
 <nav>
     <ul style="list-style: none; padding: 0; display: flex; justify-content: center; gap: 1rem;">  <!-- Estilo del menú -->
-        <a href="{% url 'create_solicitud' %}" style="color: #ff6600;">Crear Solicitud</a>  <!-- Enlace para crear solicitud -->
-        <a href="{% url 'read_solicitud' %}" style="color: #ff6600;">Mis solicitudes</a>  <!-- Enlace para ver mis solicitudes -->
-        <a href="{% url 'read_envio' %}" style="color: #ff6600;">Seguimiento de Envíos</a>  <!-- Enlace para seguimiento de envíos -->
+        <a href="{% url 'create_evento' %}" class= "btn btn-menu ">Agregar</a>  <!-- Enlace para agregar eventos -->
+        <a href="{% url 'read_evento' %}" class= "btn btn-menu">Mis Eventos </a>  <!-- Enlace para ver mis eventos -->
+        <a href="{% url 'read_seguimiento' %}" class= "btn btn-menu">Seguimientos </a>  <!-- Enlace para realizar seguimientos -->
     </ul>
 </nav>
 <div>

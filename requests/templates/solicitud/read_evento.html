@@ -1,0 +1,42 @@
+{% extends 'menu.html' %}  <!-- Extiende la plantilla base 'menu.html' -->
+
+{% block title %}Buscar Solicitud{% endblock %}  <!-- Define el título de la página -->
+
+{% block page_content %}  <!-- Bloque de contenido de la página -->
+{% load static %}  <!-- Cargar archivos estáticos -->
+
+<head>
+    <link rel="stylesheet" href="{% static 'css/read_solicitud.css' %}">  <!-- Enlace a la hoja de estilos CSS -->
+</head>
+
+<div class="container">
+    <h1>Eventos</h1>
+    <ul>
+        {% for evento in eventos %}
+        <li>
+            <div class="solicitud-info-container">
+                <div class="solicitud-info">
+                    <strong>{{ evento.evento }}</strong> - {{ evento.fecha }}
+                </div>
+                <div class="button-container">
+                    <a href="{% url 'edit_evento' evento.id %}" class="btn btn-edit">Editar</a>
+                    <a href="{% url 'delete_evento' evento.id %}" class="btn btn-delete">Eliminar</a>
+                    <a href="{% url 'create_seguimiento' evento.id_usuario evento.id %}" 
+                       class="btn btn-seguimiento 
+                       {% if evento.seguimiento_creado %}disabled{% endif %}">
+                       {% if evento.seguimiento_creado %}
+                           Seguimiento creado
+                       {% else %}
+                           Realizar Seguimiento
+                       {% endif %}
+                    </a>
+                </div>
+            </div>
+        </li>
+        {% empty %}
+        <li>No hay eventos registrados.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'menu.html' %}  <!-- Extiende la plantilla base 'menu.html' -->
+
+{% block title %}Crear Solicitud{% endblock %}  <!-- Define el título de la página -->
+
+{% block page_content %}  <!-- Bloque de contenido de la página -->
+<script>
+</script>
+<h1>Agregar Eventos de Ciberseguridad</h1>  <!-- Título principal -->
+
+<div class="form-container">  <!-- Contenedor del formulario -->
+    <form method="POST" action="{% url 'create_evento' %}">  <!-- Formulario para agregar eventos -->
+        {% csrf_token %}  <!-- Token CSRF para seguridad -->
+        {{ form.as_p }}  <!-- Renderiza el formulario como párrafos -->
+        <button type="submit">Agregar</button>  <!-- Botón para enviar el formulario -->
+    </form>
+</div>
+{% endblock %}

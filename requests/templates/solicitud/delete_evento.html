@@ -1,18 +1,20 @@
 {% extends 'menu.html' %}  <!-- Extiende la plantilla base 'menu.html' -->
-
 {% block title %}Eliminar Solicitud{% endblock %}  <!-- Define el título de la página -->
-
 {% block page_content %}  <!-- Bloque de contenido de la página -->
-<h1>Eliminar Solicitud</h1>  <!-- Título principal -->
+{% load static %}  <!-- Cargar archivos estáticos -->
+<head>
+    <link rel="stylesheet" href="{% static 'css/read_solicitud.css' %}">  <!-- Enlace a la hoja de estilos CSS -->
+</head>
+<h1>Eliminar Evento</h1>  <!-- Título principal -->
 
 <div class="form-container">  <!-- Contenedor del formulario -->
-    <p>¿Estás seguro de que quieres eliminar la solicitud para "{{ solicitud.nombre_producto }}"?</p>  <!-- Mensaje de confirmación -->
+    <p>¿Estás seguro de que quieres eliminar el evento: "{{ evento }}"?</p>  <!-- Mensaje de confirmación -->
 
     <form method="POST">  <!-- Formulario para eliminar la solicitud -->
         {% csrf_token %}  <!-- Token CSRF para seguridad -->
         
         <button type="submit" class="btn btn-delete">Eliminar</button>  <!-- Botón para eliminar la solicitud -->
-        <a href="{% url 'read_solicitud' %}" class="btn">Cancelar</a>  <!-- Enlace para cancelar la operación -->
+        <a href="{% url 'read_evento' %}" class="btn btn-generico">Cancelar</a>  <!-- Enlace para cancelar la operación -->
     </form>
 </div>
 {% endblock %}

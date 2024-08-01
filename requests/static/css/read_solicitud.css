@@ -55,6 +55,18 @@ li {
     gap: 10px; /* Espacio entre los botones */
 }
 
+.button-container2 {
+    display: flex;
+    flex-direction: column; /* Coloca los botones en columna */
+    align-items: flex-start; /* Alinea los botones a la izquierda */
+}
+
+.button-container2 a {
+    margin-bottom: 5px; /* Espacio entre los botones */
+    width: 100px; /* Ancho fijo para ambos botones */
+}
+
+
 /* Estilos para los botones */
 .btn {
     display: inline-block;
@@ -70,6 +82,15 @@ li {
 .btn:hover {
     filter: brightness(90%);
 }
+
+.btn-generico {
+    background-color: #007bff;
+}
+
+.btn-generico:hover {
+    background-color: #0056b3;
+}
+
 
 /* Estilos para el botón de edición */
 .btn-edit {
@@ -87,4 +108,10 @@ li {
 
 .btn-delete:hover {
     background-color: #c82333;
+}
+
+.disabled {
+    pointer-events: none;
+    cursor: default;
+    color: grey;
 }

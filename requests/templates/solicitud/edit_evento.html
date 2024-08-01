@@ -1,0 +1,23 @@
+{% extends 'menu.html' %}  <!-- Extiende la plantilla base 'menu.html' -->
+
+{% block title %}Editar Solicitud{% endblock %}  <!-- Define el título de la página -->
+
+{% block page_content %}  <!-- Bloque de contenido de la página -->
+
+{% load static %}  <!-- Cargar archivos estáticos -->
+<head>
+    <link rel="stylesheet" href="{% static 'css/read_solicitud.css' %}">  <!-- Enlace a la hoja de estilos CSS -->
+</head>
+
+<script>
+</script>
+<h1>Editar Evento</h1>  <!-- Título principal -->
+
+<div class="form-container">  <!-- Contenedor del formulario -->
+    <form method="POST">  <!-- Formulario para editar la solicitud -->
+        {% csrf_token %}  <!-- Token CSRF para seguridad -->
+        {{ form.as_p }}  <!-- Renderiza el formulario como párrafos -->
+        <button type="submit" class="btn btn-generico">Guardar cambios</button>  <!-- Botón para guardar los cambios -->
+    </form>
+</div>
+{% endblock %}

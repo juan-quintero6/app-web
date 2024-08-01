@@ -3,9 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.urls import reverse
 from django.http import HttpResponse
-from .models import Solicitud, Envio
-from .forms import SolicitudForm
-from core.models import Perfil
+from .models import Evento, Seguimiento
+from .forms import EventoForm
+from core.models import Perfil, Cliente
+from django.utils import timezone
 
 @login_required
 def home(request):
@@ -22,64 +23,11 @@ def c_home(request):
     return render(request, 'c-home.html')
 
 @login_required
-def c_read_solicitud(request):
-    """
-    Renderiza la lista de solicitudes de carga para un cliente.
-    """
-    solicitudes = Solicitud.objects.filter(estado='En espera')  # pylint: disable=no-member
-    return render(request, 'c_read_solicitud.html', {'solicitudes': solicitudes})
-
-@login_required
-def c_read_envio(request):
-    """
-    Renderiza la lista de envíos para un conductor.
-    """
-    perfil = Perfil.objects.get(usuario=request.user)  # pylint: disable=no-member
-
-    user_id = perfil.usuario.id
-    envios = Envio.objects.filter(id_conductor=user_id)  # pylint: disable=no-member
-    return render(request, 'c_read_envio.html', {'envios': envios})
-
-@login_required
-def detail_solicitud(request, pk):
-    """
-    Renderiza los detalles de una solicitud de carga.
-    """
-    solicitud = get_object_or_404(Solicitud, pk=pk)
-    return render(request, 'c_detail_solicitud.html', {'solicitud': solicitud})
-
-@login_required
-def accept_solicitud(request, pk):
-    """
-    Procesa la aceptación de una solicitud de carga.
-    """
-    solicitud = get_object_or_404(Solicitud, pk=pk)
-    
-    if request.method == 'POST':
-        solicitud.estado = 'En proceso'
-        solicitud.save()
-
-        # Crear un nuevo objeto Envio
-        envio = Envio(  # pylint: disable=no-member
-            id_conductor=request.user.id,  # Asigna el id del usuario autenticado como id_conductor
-            calificacion=0,  # Inicializa con una calificación predeterminada
-            solicitud=solicitud
-        )
-        envio.save()
-
-        origin = solicitud.origen
-        destination = solicitud.destino
-        id_solicitud = solicitud.id
-        return redirect(reverse('envio') + f'?origin={origin}&destination={destination}&id={id_solicitud}')
-    
-    return render(request, 'c_read_solicitud.html', {'solicitud': solicitud})
-
-@login_required
 def start_journey(request, pk):
     """
     Marca una solicitud de carga como en marcha.
     """
-    solicitud = get_object_or_404(Solicitud, pk=pk)
+    solicitud = get_object_or_404(Evento, pk=pk)
     
     if request.method == 'POST':
         solicitud.estado = 'En marcha'
@@ -89,28 +37,7 @@ def start_journey(request, pk):
     return HttpResponse(status=405)  # Method Not Allowed response
 
 @login_required
-def delivered(request, pk):
-    """
-    Marca una solicitud de carga como entregada.
-    """
-    solicitud = get_object_or_404(Solicitud, pk=pk)
-    
-    if request.method == 'POST':
-        solicitud.estado = 'Entregado'
-        solicitud.save()
-        return redirect(c_read_envio)  # No Content response
-    
-    return HttpResponse(status=405)  # Method Not Allowed response
-
-@login_required
-def envio(request):
-    """
-    Renderiza la página de envío.
-    """
-    return render(request, 'index.html')
-
-@login_required
-def create_solicitud(request):
+def create_evento(request):
     """
     Crea una nueva solicitud de carga.
     """
@@ -119,61 +46,96 @@ def create_solicitud(request):
     user_id = perfil.usuario.id
 
     if request.method == 'POST':
-        form = SolicitudForm(request.POST)
+        form = EventoForm(request.POST)
         if form.is_valid():
-            solicitud = form.save(commit=False)  # No guardar aún en la base de datos
-            solicitud.id_cliente = user_id  # Asignar la ID del usuario autenticado al campo id_cliente
-            solicitud.save() 
-            return redirect('read_solicitud')
+            evento = form.save(commit=False)  # No guardar aún en la base de datos
+            evento.id_usuario = user_id  # Asignar la ID del usuario autenticado al campo id_cliente
+            evento.save() 
+            return redirect('read_evento')
     else:
-        form = SolicitudForm()
-    return render(request, 'create_solicitud.html', {'form': form})
+        form = EventoForm()
+    return render(request, 'create_evento.html', {'form': form})
 
 @login_required
-def read_solicitud(request):
+def read_evento(request):
     """
-    Renderiza la lista de solicitudes de carga del cliente.
+    Renderiza la lista de eventos del usuario
     """
     perfil = Perfil.objects.get(usuario=request.user)  # pylint: disable=no-member
 
     user_id = perfil.usuario.id
-    solicitudes = Solicitud.objects.filter(id_cliente=user_id, estado='En espera')  # pylint: disable=no-member
-    return render(request, 'read_solicitud.html', {'solicitudes': solicitudes})
+    eventos = Evento.objects.filter(id_usuario=user_id, estado='Abierto')  # pylint: disable=no-member
+    return render(request, 'read_evento.html', {'eventos': eventos})
 
 @login_required
-def edit_solicitud_view(request, pk):
-    """
-    Renderiza el formulario para editar una solicitud de carga.
-    """
-    solicitud = get_object_or_404(Solicitud, pk=pk)
-    if request.method == 'POST':
-        form = SolicitudForm(request.POST, instance=solicitud)
-        if form.is_valid():
-            form.save()
-            return redirect('read_solicitud')
-    else:
-        form = SolicitudForm(instance=solicitud)
-    return render(request, 'edit_solicitud.html', {'form': form})
+def create_seguimiento(request, id_usuario, id_evento):
+    cliente = get_object_or_404(Cliente, pk=id_usuario)
+    evento = get_object_or_404(Evento, pk=id_evento, id_usuario=id_usuario)
+    cantidad_inicial = 1
+
+    if not evento.seguimiento_creado:
+        Seguimiento.objects.create( # pylint: disable=no-member
+            id_usuario=cliente,
+            id_evento=evento,
+            cantidad=cantidad_inicial,
+            fecha_seguimiento=timezone.now()
+        )
+        evento.seguimiento_creado = True
+        evento.save()
+
+    return redirect('read_seguimiento')
 
 @login_required
-def delete_solicitud_view(request, pk):
-    """
-    Renderiza la confirmación para eliminar una solicitud de carga.
-    """
-    solicitud = get_object_or_404(Solicitud, pk=pk)
-    if request.method == 'POST':
-        solicitud.delete()
-        return redirect('read_solicitud')
-    return render(request, 'delete_solicitud.html', {'solicitud': solicitud})
-
-@login_required
-def read_envio(request):
+def read_seguimiento(request):
     """
     Renderiza la lista de envíos del cliente.
     """
-    client_id = request.user.id
-    solicitudes = Solicitud.objects.filter(id_cliente=client_id).exclude(estado='En espera')  # pylint: disable=no-member
-    return render(request, 'read_envio.html', {'solicitudes': solicitudes})
+    perfil = Perfil.objects.get(usuario=request.user)  # pylint: disable=no-member
+
+    user_id = perfil.usuario.id
+    seguimientos = Seguimiento.objects.filter(id_usuario=user_id)  # pylint: disable=no-member
+    return render(request, 'read_seguimiento.html', {'seguimientos': seguimientos})
+
+@login_required
+def gestionar_seguimiento(request, id_seguimiento): 
+    seguimiento = get_object_or_404(Seguimiento, id=id_seguimiento) 
+    return render(request, 'gestionar_seguimiento.html', {'seguimiento': seguimiento})
+
+@login_required
+def actualizar_seguimiento(request, id_seguimiento):
+    seguimientos = Seguimiento.objects.filter(id=id_seguimiento) # pylint: disable=no-member
+    for seguimiento in seguimientos:
+        seguimiento.cantidad += 1
+        seguimiento.fecha_seguimiento = timezone.now()
+        seguimiento.save()
+    return redirect('gestionar_seguimiento', id_seguimiento=id_seguimiento)
+    
+
+@login_required
+def edit_evento_view(request, pk):
+    """
+    Renderiza el formulario para editar una solicitud de carga.
+    """
+    solicitud = get_object_or_404(Evento, pk=pk)
+    if request.method == 'POST':
+        form = EventoForm(request.POST, instance=solicitud)
+        if form.is_valid():
+            form.save()
+            return redirect('read_evento')
+    else:
+        form = EventoForm(instance=solicitud)
+    return render(request, 'edit_evento.html', {'form': form})
+
+@login_required
+def delete_evento_view(request, pk):
+    """
+    Renderiza la confirmación para eliminar una solicitud de carga.
+    """
+    evento = get_object_or_404(Evento, pk=pk)
+    if request.method == 'POST':
+        evento.delete()
+        return redirect('read_evento')
+    return render(request, 'delete_evento.html', {'evento': evento})
 
 @login_required
 def logout_view(request):
