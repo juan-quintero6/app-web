@@ -11,17 +11,27 @@
 
 <div class="container">
     <h1>Gestión de Seguimiento</h1>
+
+    <!-- Sección para mostrar mensajes -->
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
     <ul>
         <li>
             <div class="solicitud-info-container">
                 <div>
                     <strong>Evento: </strong>{{ seguimiento.id_evento }}  <br>
                     <br><strong>Cantidad: </strong>{{ seguimiento.cantidad }} <br> 
-                    <br><strong>Ultimo: </strong>{{ seguimiento.fecha_seguimiento }}   
+                    <br><strong>Último: </strong>{{ seguimiento.fecha_seguimiento }}   
                 </div>
                 <div class="button-container2">
                     <a href="{% url 'actualizar_seguimiento' seguimiento.id %}" class="btn btn-generico">Seguimiento</a>
-                    <a href="{% url 'actualizar_seguimiento' seguimiento.id %}" class="btn btn-delete">Cerrar Evento</a>
+                    <a href="{% url 'cerrar_evento' seguimiento.id_evento.id %}" class="btn btn-delete">Cerrar Evento</a>
                 </div>
             </div>
         </li>

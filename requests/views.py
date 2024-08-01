@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.http import HttpResponse
 from .models import Evento, Seguimiento
 from .forms import EventoForm
+from django.contrib import messages
 from core.models import Perfil, Cliente
 from django.utils import timezone
 
@@ -88,13 +89,15 @@ def create_seguimiento(request, id_usuario, id_evento):
 @login_required
 def read_seguimiento(request):
     """
-    Renderiza la lista de envíos del cliente.
+    Renderiza la lista de seguimientos de eventos abiertos del cliente.
     """
     perfil = Perfil.objects.get(usuario=request.user)  # pylint: disable=no-member
-
     user_id = perfil.usuario.id
-    seguimientos = Seguimiento.objects.filter(id_usuario=user_id)  # pylint: disable=no-member
+
+    # Filtrar seguimientos donde el evento asociado esté 'Abierto'
+    seguimientos = Seguimiento.objects.filter(id_usuario=user_id, id_evento__estado='Abierto')  # pylint: disable=no-member
     return render(request, 'read_seguimiento.html', {'seguimientos': seguimientos})
+
 
 @login_required
 def gestionar_seguimiento(request, id_seguimiento): 
@@ -103,13 +106,36 @@ def gestionar_seguimiento(request, id_seguimiento):
 
 @login_required
 def actualizar_seguimiento(request, id_seguimiento):
-    seguimientos = Seguimiento.objects.filter(id=id_seguimiento) # pylint: disable=no-member
-    for seguimiento in seguimientos:
-        seguimiento.cantidad += 1
-        seguimiento.fecha_seguimiento = timezone.now()
-        seguimiento.save()
+    seguimiento = get_object_or_404(Seguimiento, id=id_seguimiento)
+
+    # Comprobar si la fecha de seguimiento es hoy
+    if seguimiento.fecha_seguimiento == timezone.now().date():
+        # Si la fecha de seguimiento ya es hoy, mostrar mensaje de aviso
+        messages.warning(request, 'Ya has realizado un seguimiento el día de hoy.')
+        return redirect('gestionar_seguimiento', id_seguimiento=id_seguimiento)
+
+    # Si la fecha de seguimiento no es hoy, proceder con la actualización
+    seguimiento.cantidad += 1
+    seguimiento.fecha_seguimiento = timezone.now()
+    seguimiento.save()
+    messages.success(request, 'Seguimiento actualizado con éxito.')
     return redirect('gestionar_seguimiento', id_seguimiento=id_seguimiento)
-    
+
+@login_required
+def cerrar_evento(request, id_evento):
+    """
+    Cierra el evento y actualiza su estado.
+    """
+    evento = get_object_or_404(Evento, id=id_evento)
+    seguimientos = Seguimiento.objects.filter(id_evento=evento) # pylint: disable=no-member
+
+    # Verifica si hay seguimientos asociados y cierra el evento
+    if seguimientos.exists():
+        evento.estado = 'Cerrado'
+        evento.save()
+        return redirect('read_evento')
+    else:
+        return HttpResponse("No se puede cerrar el evento porque no tiene seguimientos asociados.", status=400)
 
 @login_required
 def edit_evento_view(request, pk):

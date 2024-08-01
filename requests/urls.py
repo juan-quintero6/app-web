@@ -15,6 +15,7 @@ urlpatterns = [
     path('read_seguimiento/', views.read_seguimiento, name='read_seguimiento'),
     path('gestionar_seguimiento/<int:id_seguimiento>/', views.gestionar_seguimiento, name='gestionar_seguimiento'),
     path('actualizar_seguimiento/<int:id_seguimiento>/', views.actualizar_seguimiento, name='actualizar_seguimiento'),
+    path('cerrar_evento/<int:id_evento>/', views.cerrar_evento, name='cerrar_evento'),
     path('logout/', views.logout_view, name='logout'),
     path('edit_user/', views.edit_user, name='edit_user'),
 ]
