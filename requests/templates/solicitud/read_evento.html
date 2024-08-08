@@ -11,6 +11,19 @@
 
 <div class="container">
     <h1>Eventos</h1>
+
+    <!-- Mostrar la cantidad de eventos abiertos del usuario -->
+    <div class="eventos-abiertos">
+        <p>Eventos abiertos: {{ eventos_abiertos_usuario }}</p>
+    </div>
+    <!-- Sección para mostrar mensajes -->
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
     <ul>
         {% for evento in eventos %}
         <li>
@@ -23,7 +36,7 @@
                        class="btn btn-edit {% if evento.seguimiento_creado %}disabled{% endif %}">
                        Editar
                     </a>
-                    <a href="{% url 'delete_evento' evento.id %}" class="btn btn-delete">Eliminar</a>
+                    <a href="{% url 'cerrar_evento' evento.id %}" class="btn btn-delete">Cerrar Evento</a>
                     <a href="{% url 'create_seguimiento' evento.id_usuario evento.id %}" 
                        class="btn btn-seguimiento 
                        {% if evento.seguimiento_creado %}disabled{% endif %}">

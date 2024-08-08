@@ -43,7 +43,6 @@ def create_evento(request):
     Crea una nueva solicitud de carga.
     """
     perfil = Perfil.objects.get(usuario=request.user)  # pylint: disable=no-member
-
     user_id = perfil.usuario.id
 
     if request.method == 'POST':
@@ -63,10 +62,16 @@ def read_evento(request):
     Renderiza la lista de eventos del usuario
     """
     perfil = Perfil.objects.get(usuario=request.user)  # pylint: disable=no-member
-
     user_id = perfil.usuario.id
+    # Eventos abiertos del usuario autenticado
     eventos = Evento.objects.filter(id_usuario=user_id, estado='Abierto')  # pylint: disable=no-member
-    return render(request, 'read_evento.html', {'eventos': eventos})
+    # Contar todos los eventos con estado "Abierto"
+    eventos_abiertos_usuario = eventos.count()  #pylint: disable=no-member
+
+    return render(request, 'read_evento.html', {
+        'eventos': eventos,
+        'eventos_abiertos_usuario': eventos_abiertos_usuario
+    })
 
 @login_required
 def create_seguimiento(request, id_usuario, id_evento):
@@ -74,6 +79,13 @@ def create_seguimiento(request, id_usuario, id_evento):
     evento = get_object_or_404(Evento, pk=id_evento, id_usuario=id_usuario)
     cantidad_inicial = 1
 
+    # Comprobar si el evento fue creado hoy
+    if evento.fecha == timezone.now().date():
+        # Mostrar mensaje de aviso si el evento fue creado hoy
+        messages.warning(request, 'No puedes gestionar un seguimiento el mismo día que se creó el evento.')
+        return redirect('read_evento')
+
+    # Si el evento no fue creado hoy, proceder con la creación del seguimiento
     if not evento.seguimiento_creado:
         Seguimiento.objects.create( # pylint: disable=no-member
             id_usuario=cliente,
@@ -83,6 +95,7 @@ def create_seguimiento(request, id_usuario, id_evento):
         )
         evento.seguimiento_creado = True
         evento.save()
+        messages.success(request, 'Seguimiento creado con éxito.')
 
     return redirect('read_seguimiento')
 
@@ -124,32 +137,35 @@ def actualizar_seguimiento(request, id_seguimiento):
 @login_required
 def cerrar_evento(request, id_evento):
     """
-    Cierra el evento y actualiza su estado.
+    Cierra el evento y actualiza su estado a 'Cerrado'.
     """
     evento = get_object_or_404(Evento, id=id_evento)
-    seguimientos = Seguimiento.objects.filter(id_evento=evento) # pylint: disable=no-member
-
-    # Verifica si hay seguimientos asociados y cierra el evento
-    if seguimientos.exists():
-        evento.estado = 'Cerrado'
-        evento.save()
-        return redirect('read_evento')
-    else:
-        return HttpResponse("No se puede cerrar el evento porque no tiene seguimientos asociados.", status=400)
+    
+    # Actualiza el estado del evento a 'Cerrado'
+    evento.estado = 'Cerrado'
+    evento.save()
+        
+    return redirect('read_evento')
 
 @login_required
 def edit_evento_view(request, pk):
     """
-    Renderiza el formulario para editar una solicitud de carga.
+    Renderiza el formulario para editar y eliminar una solicitud de carga.
     """
     solicitud = get_object_or_404(Evento, pk=pk)
+
     if request.method == 'POST':
-        form = EventoForm(request.POST, instance=solicitud)
-        if form.is_valid():
-            form.save()
+        if 'delete' in request.POST:  # Verifica si el usuario quiere eliminar el evento
+            solicitud.delete()
             return redirect('read_evento')
+        else:
+            form = EventoForm(request.POST, instance=solicitud)
+            if form.is_valid():
+                form.save()
+                return redirect('read_evento')
     else:
         form = EventoForm(instance=solicitud)
+    
     return render(request, 'edit_evento.html', {'form': form})
 
 @login_required

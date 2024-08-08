@@ -1,23 +1,32 @@
-{% extends 'menu.html' %}  <!-- Extiende la plantilla base 'menu.html' -->
+{% extends 'menu.html' %}
 
-{% block title %}Editar Solicitud{% endblock %}  <!-- Define el título de la página -->
+{% block title %}Editar Solicitud{% endblock %}
 
-{% block page_content %}  <!-- Bloque de contenido de la página -->
+{% block page_content %}
+{% load static %}
 
-{% load static %}  <!-- Cargar archivos estáticos -->
 <head>
-    <link rel="stylesheet" href="{% static 'css/read_solicitud.css' %}">  <!-- Enlace a la hoja de estilos CSS -->
+    <link rel="stylesheet" href="{% static 'css/read_solicitud.css' %}">
 </head>
 
-<script>
-</script>
-<h1>Editar Evento</h1>  <!-- Título principal -->
+<h1>Editar Evento</h1>
 
-<div class="form-container">  <!-- Contenedor del formulario -->
-    <form method="POST">  <!-- Formulario para editar la solicitud -->
-        {% csrf_token %}  <!-- Token CSRF para seguridad -->
-        {{ form.as_p }}  <!-- Renderiza el formulario como párrafos -->
-        <button type="submit" class="btn btn-generico">Guardar cambios</button>  <!-- Botón para guardar los cambios -->
-    </form>
+<div class="form-container">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="button-group">
+                <button type="submit" class="btn btn-generico">Guardar </button>
+            </div>
+        </form>
+        <p></p>
+        <!-- Formulario separado para eliminar el evento -->
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="delete" value="1">
+            <div class="button-group">
+                <button type="submit" class="btn btn-delete">Eliminar</button>
+            </div>
+        </form>  
 </div>
 {% endblock %}
